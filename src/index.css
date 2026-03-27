@@ -1,0 +1,916 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global hidden scrollbar */
+*, *::before, *::after {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+}
+
+@layer base {
+  :root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 199 89% 48%;
+  --radius: 0.5rem;
+  --green: 152 69% 36%;
+  --red: 0 72% 51%;
+  --orange: 25 95% 53%;
+  --yellow: 45 93% 47%;
+  --sport-nba: 204 94% 54%;
+  --sport-ncaab: 221 83% 57%;
+  --sport-nhl: 142 71% 45%;
+  --sport-soccer: 149 72% 42%;
+  --sport-esports: 267 85% 64%;
+  --sport-tennis: 78 84% 48%;
+  --sport-cricket: 13 85% 57%;
+  --sport-basketball: 26 92% 56%;
+  --sport-baseball: 0 84% 62%;
+  --sport-hockey: 188 78% 44%;
+  --sport-rugby: 24 94% 52%;
+  --sport-lacrosse: 291 64% 58%;
+  --sport-ufc: 358 83% 59%;
+  --sport-football: 44 93% 48%;
+  --sport-table-tennis: 334 77% 58%;
+  --sport-golf: 112 47% 45%;
+  --sport-formula-1: 6 89% 58%;
+  --sport-chess: 237 20% 42%;
+  --sport-boxing: 349 84% 56%;
+  --sport-pickleball: 170 66% 43%;
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+  --background: 228 12% 9%;
+  --foreground: 210 40% 98%;
+  --card: 225 13% 12%;
+  --card-foreground: 210 40% 98%;
+  --popover: 225 13% 12%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 10% 13%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 220 10% 13%;
+  --muted-foreground: 220 10% 55%;
+  --accent: 220 10% 13%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 220 10% 16%;
+  --input: 220 10% 16%;
+  --ring: 199 89% 48%;
+  --green: 152 69% 36%;
+  --red: 0 72% 51%;
+  --orange: 25 95% 53%;
+  --yellow: 45 93% 47%;
+  --sport-nba: 204 94% 54%;
+  --sport-ncaab: 221 83% 57%;
+  --sport-nhl: 142 71% 45%;
+  --sport-soccer: 149 72% 42%;
+  --sport-esports: 267 85% 64%;
+  --sport-tennis: 78 84% 48%;
+  --sport-cricket: 13 85% 57%;
+  --sport-basketball: 26 92% 56%;
+  --sport-baseball: 0 84% 62%;
+  --sport-hockey: 188 78% 44%;
+  --sport-rugby: 24 94% 52%;
+  --sport-lacrosse: 291 64% 58%;
+  --sport-ufc: 358 83% 59%;
+  --sport-football: 44 93% 48%;
+  --sport-table-tennis: 334 77% 58%;
+  --sport-golf: 112 47% 45%;
+  --sport-formula-1: 6 89% 58%;
+  --sport-chess: 237 20% 42%;
+  --sport-boxing: 349 84% 56%;
+  --sport-pickleball: 170 66% 43%;
+  --sidebar-background: 220 13% 5%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 224.3 76.3% 48%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 10% 13%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 220 10% 16%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+  @apply border-border;
+  }
+  body {
+  @apply bg-background text-foreground;
+  -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  }
+  .hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  }
+}
+
+.market-card {
+  @apply bg-card border border-border/60 rounded-xl p-3.5 cursor-pointer transition-all duration-200 ease-out;
+  }
+.market-card:hover {
+  @apply border-border bg-accent/30;
+  }
+
+.option-btn-yes {
+  @apply px-3 py-1 text-xs font-semibold rounded-md transition-colors;
+  background-color: hsl(var(--green) / 0.15);
+  color: hsl(var(--green));
+  border: 1px solid hsl(var(--green) / 0.3);
+  }
+.option-btn-yes:hover {
+  background-color: hsl(var(--green) / 0.25);
+  }
+
+.option-btn-no {
+  @apply px-3 py-1 text-xs font-semibold rounded-md transition-colors;
+  background-color: hsl(var(--red) / 0.15);
+  color: hsl(var(--red));
+  border: 1px solid hsl(var(--red) / 0.3);
+  }
+.option-btn-no:hover {
+  background-color: hsl(var(--red) / 0.25);
+  }
+
+  /* ── Polymarket-style Sports ── */
+.pm-sports-shell {
+  @apply border-b border-border bg-card text-foreground;
+  }
+
+.pm-sports-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 360px;
+  min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+.pm-sports-sidebar {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-right: 1px solid hsl(var(--border));
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  }
+.pm-sports-sidebar::-webkit-scrollbar {
+  display: none;
+  }
+
+.pm-sports-mode-switch {
+  @apply flex flex-col gap-0.5 border-b px-3 py-3;
+  border-color: hsl(var(--border));
+  }
+
+.pm-sports-mode-btn {
+  @apply flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors;
+  color: hsl(var(--foreground) / 0.65);
+  }
+.pm-sports-mode-btn:hover {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  }
+.pm-sports-mode-btn-active {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  }
+
+.pm-live-dot {
+  @apply inline-block h-2 w-2 rounded-full;
+  background-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.14);
+  }
+
+.pm-sidebar-label {
+  @apply px-4 pb-1.5 pt-4 text-[10px] font-semibold uppercase tracking-[0.14em];
+  color: hsl(var(--foreground) / 0.4);
+  }
+
+.pm-sidebar-nav {
+  @apply space-y-0.5 px-2 pb-4;
+  }
+
+.pm-sport-row {
+  @apply flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors;
+  color: hsl(var(--foreground) / 0.78);
+  }
+.pm-sport-row:hover {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  }
+.pm-sport-row-active {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+  box-shadow: inset 2px 0 0 hsl(var(--sport-accent, var(--primary)));
+  }
+
+.pm-sport-icon {
+  @apply h-5 w-5 rounded object-cover shrink-0;
+  }
+.pm-sport-svg-icon {
+  @apply h-5 w-5 shrink-0;
+  color: hsl(var(--sport-accent, var(--muted-foreground)));
+  }
+.pm-sport-row-active .pm-sport-svg-icon {
+  color: hsl(var(--sport-accent, var(--foreground)));
+  }
+.pm-sport-count {
+  @apply text-[12px] font-medium tabular-nums;
+  color: hsl(var(--foreground) / 0.45);
+  }
+
+  /* ── Center Feed ── */
+.pm-center-feed {
+  @apply min-w-0;
+  border-right: 1px solid hsl(var(--border));
+  }
+
+.pm-board-header {
+  @apply flex items-center justify-between border-b px-5 py-4;
+  }
+.pm-board-title {
+  @apply text-lg font-semibold tracking-tight text-foreground;
+  }
+.pm-icon-btn {
+  @apply inline-flex h-8 w-8 items-center justify-center rounded-full border bg-background text-muted-foreground transition-colors;
+  }
+.pm-icon-btn:hover {
+  @apply text-foreground;
+  }
+
+  /* ── League sections ── */
+.pm-league-section {
+  @apply border-b border-border last:border-b-0;
+  }
+
+.pm-league-header {
+  @apply px-5 pb-2 pt-4;
+  }
+
+.pm-league-title-row {
+  @apply flex items-center gap-2.5;
+  }
+.pm-league-title-row h2 {
+  @apply text-[14px] font-semibold text-foreground;
+  }
+
+.pm-league-status {
+  @apply rounded-full px-2 py-0.5 text-[10px] font-semibold;
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--muted-foreground));
+  }
+
+.pm-league-meta {
+  @apply mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground;
+  }
+
+.pm-market-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(160px, 0.8fr) 90px 90px;
+  @apply items-center gap-2 px-5 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground;
+  }
+
+.pm-market-list {
+  /* No scroll — flows naturally with page */
+  }
+
+  /* ── Futures cards ── */
+.pm-futures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  @apply gap-3 px-4 pb-4;
+  }
+
+.pm-futures-card {
+  @apply rounded-xl border border-border bg-card p-4 cursor-pointer transition-colors;
+  }
+.pm-futures-card:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  }
+.pm-futures-card-selected {
+  border-color: hsl(var(--primary));
+  }
+
+.pm-futures-title {
+  @apply text-sm font-semibold text-foreground mb-3;
+  }
+
+.pm-futures-list {
+  @apply space-y-2;
+  }
+
+.pm-futures-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px minmax(80px, 1fr);
+  @apply items-center gap-2;
+  }
+
+.pm-futures-team {
+  @apply flex items-center gap-2 min-w-0;
+  }
+
+.pm-futures-logo {
+  @apply h-5 w-5 rounded-sm object-cover shrink-0;
+  }
+
+.pm-futures-logo-fallback {
+  @apply inline-flex h-5 w-5 items-center justify-center rounded-sm text-[8px] font-bold text-white shrink-0;
+  }
+
+.pm-futures-label {
+  @apply text-[13px] font-medium text-foreground;
+  }
+
+.pm-futures-pct {
+  @apply text-right text-[14px] font-bold tabular-nums text-foreground;
+  }
+
+.pm-futures-bar-track {
+  @apply h-5 w-full rounded-sm overflow-hidden;
+  background-color: hsl(var(--secondary));
+  }
+
+.pm-futures-bar-fill {
+  @apply h-full rounded-sm transition-all duration-300;
+  }
+
+.pm-futures-show-more {
+  @apply mt-2 text-xs font-medium text-muted-foreground transition-colors;
+  }
+.pm-futures-show-more:hover {
+  color: hsl(var(--foreground));
+  }
+
+  /* ── Market rows ── */
+.pm-market-row {
+  @apply rounded-lg border border-transparent cursor-pointer;
+  padding: 10px 12px;
+  margin: 0 8px;
+  }
+.pm-market-row:hover {
+  background-color: hsl(var(--secondary) / 0.3);
+  }
+.pm-market-row-selected {
+  background-color: hsl(var(--secondary) / 0.45);
+  border-color: hsl(var(--border));
+  }
+
+.pm-match-header {
+  @apply flex items-center justify-between mb-2;
+  }
+.pm-match-header-left {
+  @apply flex items-center gap-2 text-[11px] text-muted-foreground;
+  }
+.pm-match-volume {
+  @apply text-[11px] text-muted-foreground;
+  }
+.pm-match-period {
+  @apply text-[10px] font-semibold px-1.5 py-0.5 rounded;
+  background-color: hsl(var(--destructive) / 0.12);
+  color: hsl(var(--destructive));
+  }
+
+.pm-row-status {
+  @apply rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide;
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--muted-foreground));
+  }
+.pm-row-status-live {
+  background-color: hsl(0 72% 51% / 0.15);
+  color: hsl(0 72% 51%);
+  }
+
+.pm-match-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(160px, 0.8fr) 90px 90px;
+  @apply items-center gap-2;
+  }
+
+.pm-team-stack {
+  @apply space-y-1.5;
+  }
+.pm-team-line {
+  @apply flex items-center gap-2.5 text-[14px] font-medium text-foreground;
+  }
+.pm-team-score {
+  @apply text-[14px] font-bold text-foreground tabular-nums w-5 text-right shrink-0;
+  }
+.pm-team-badge {
+  @apply inline-flex items-center justify-center rounded-[4px] px-1.5 py-0.5 text-[11px] font-extrabold text-white shrink-0;
+  min-width: 36px;
+  height: 24px;
+  }
+.pm-team-crest {
+  @apply h-6 w-6 rounded-[4px] border border-border object-cover shrink-0;
+  }
+.pm-team-name {
+  @apply truncate text-[14px] font-medium text-foreground flex-1;
+  }
+.pm-team-score {
+  @apply text-[15px] font-bold text-foreground ml-auto tabular-nums;
+  min-width: 24px;
+  text-align: right;
+  }
+.pm-team-record {
+  @apply text-[11px] text-muted-foreground ml-1;
+  }
+
+.pm-moneyline-group {
+  @apply flex flex-col gap-1.5;
+  }
+.pm-odds-chip {
+  @apply inline-flex min-h-[32px] items-center justify-center gap-2 rounded-md border px-3 py-1 text-[13px] font-bold transition-colors w-full;
+  border-color: transparent;
+  }
+.pm-odds-chip:hover {
+  filter: brightness(1.15);
+  }
+.pm-odds-chip-buy {
+  background-color: hsl(199 89% 48% / 0.18);
+  color: hsl(199 89% 65%);
+  }
+.pm-odds-chip-sell {
+  background-color: hsl(199 89% 48% / 0.10);
+  color: hsl(199 89% 55%);
+  }
+.pm-odds-chip-active {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  }
+.pm-odds-label {
+  @apply leading-none text-[12px] font-extrabold;
+  }
+.pm-odds-price {
+  @apply tabular-nums leading-none text-[13px];
+  }
+
+.pm-spread-total-col {
+  @apply flex flex-col gap-1.5 text-center;
+  }
+.pm-spread-total-cell {
+  @apply text-[12px] font-medium text-muted-foreground min-h-[32px] flex items-center justify-center gap-1;
+  }
+.pm-spread-total-cell span:last-child {
+  @apply text-foreground font-bold;
+  }
+
+.pm-game-view-col {
+  @apply flex items-center justify-end;
+  }
+.pm-game-view {
+  @apply inline-flex items-center gap-0.5 text-[11px] font-medium text-muted-foreground transition-colors cursor-pointer rounded-full px-2 py-1;
+  background-color: hsl(var(--secondary) / 0.5);
+  }
+.pm-game-view:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--secondary));
+  }
+
+  /* ── Trade panel (right) ── */
+.pm-trade-aside {
+  @apply hidden xl:block;
+  }
+.pm-trade-sticky {
+  @apply sticky top-0 p-3;
+  }
+
+.pm-trade-card {
+  @apply overflow-hidden rounded-2xl border border-border bg-card;
+  }
+.pm-trade-empty {
+  @apply flex min-h-[360px] items-center justify-center;
+  }
+.pm-trade-head {
+  @apply flex items-center gap-3 border-b px-4 py-3;
+  }
+.pm-trade-team-logo {
+  @apply h-9 w-9 rounded-full border border-border object-cover shrink-0;
+  }
+
+.pm-trade-toolbar {
+  @apply flex items-center justify-between px-4 py-2.5;
+  }
+.pm-trade-tabs {
+  @apply flex items-center gap-3;
+  }
+.pm-trade-tab {
+  @apply border-b-2 border-transparent pb-1.5 text-sm font-semibold text-muted-foreground transition-colors;
+  }
+.pm-trade-tab-active {
+  @apply text-foreground;
+  border-color: hsl(var(--foreground));
+  }
+.pm-trade-market-link {
+  @apply text-sm font-medium text-foreground transition-opacity;
+  }
+.pm-trade-market-link:hover {
+  opacity: 0.72;
+  }
+
+.pm-trade-outcomes {
+  @apply flex flex-col gap-1.5 px-4 py-2;
+  }
+.pm-trade-outcomes-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  }
+.pm-trade-outcome-btn {
+  @apply relative rounded-lg border px-3 py-2 text-sm font-semibold transition-all cursor-pointer overflow-hidden;
+  }
+.pm-trade-outcome-btn:hover {
+  transform: translateX(2px);
+  }
+.pm-trade-outcome-bar {
+  @apply absolute inset-y-0 left-0 rounded-l-lg transition-all duration-500;
+  opacity: 0.15;
+  }
+.pm-trade-outcome-active .pm-trade-outcome-bar {
+  background-color: hsl(var(--primary-foreground));
+  opacity: 0.18;
+  }
+.pm-trade-outcome-idle .pm-trade-outcome-bar {
+  background-color: hsl(var(--primary));
+  opacity: 0.1;
+  }
+.pm-trade-outcome-content {
+  @apply relative z-10 flex items-center justify-between w-full;
+  }
+.pm-trade-option-pct {
+  @apply text-xs font-bold opacity-80;
+  }
+.pm-trade-option-img {
+  @apply h-6 w-6 rounded-full object-cover flex-shrink-0;
+  }
+.pm-trade-option-initials {
+  @apply flex items-center justify-center h-6 w-6 rounded-full text-[10px] font-bold flex-shrink-0;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  }
+.pm-trade-option-price {
+  @apply text-xs font-bold flex-shrink-0 ml-2;
+  }
+.pm-trade-outcome-active {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  }
+.pm-trade-outcome-active .pm-trade-option-initials {
+  background-color: hsl(var(--primary-foreground) / 0.2);
+  color: hsl(var(--primary-foreground));
+  }
+.pm-trade-outcome-idle {
+  background-color: hsl(var(--secondary));
+  border-color: hsl(var(--border));
+  color: hsl(var(--secondary-foreground));
+  }
+
+.pm-trade-amount-section {
+  @apply px-4 py-2;
+  }
+.pm-trade-amount-box {
+  @apply mt-2 flex items-center justify-end gap-2 border-b border-border pb-2;
+  }
+.pm-trade-currency {
+  @apply text-3xl font-semibold text-muted-foreground/50;
+  }
+.pm-trade-amount-input {
+  @apply h-auto border-0 bg-transparent p-0 text-right text-4xl font-semibold text-foreground shadow-none focus-visible:ring-0;
+  }
+
+.pm-trade-quick-row {
+  @apply flex flex-wrap gap-1.5 px-4 py-2;
+  }
+.pm-trade-quick-btn {
+  @apply rounded-lg border border-border bg-secondary px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors;
+  }
+.pm-trade-quick-btn:hover {
+  background-color: hsl(var(--accent));
+  }
+
+.pm-trade-cta {
+  @apply w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  }
+.pm-trade-cta:hover {
+  background-color: hsl(var(--primary) / 0.9);
+  }
+
+.pm-trade-position-row {
+  @apply flex items-center justify-between rounded-xl border border-border bg-secondary/40 p-3;
+  }
+
+  /* ── Crypto Hub cards ── */
+.pm-crypto-card {
+  @apply rounded-xl border border-border bg-card p-3 cursor-pointer transition-all duration-300 ease-out;
+  }
+.pm-crypto-card:hover {
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: 0 4px 16px -4px hsl(var(--primary) / 0.08);
+  }
+.pm-crypto-yes-btn {
+  @apply px-2.5 py-1 text-[10px] font-bold rounded-md transition-colors;
+  background-color: hsl(152 69% 45% / 0.18);
+  color: hsl(152 69% 55%);
+  }
+.pm-crypto-yes-btn:hover {
+  background-color: hsl(152 69% 45% / 0.3);
+  }
+.pm-crypto-no-btn {
+  @apply px-2.5 py-1 text-[10px] font-bold rounded-md transition-colors;
+  background-color: hsl(0 72% 51% / 0.18);
+  color: hsl(0 72% 60%);
+  }
+.pm-crypto-no-btn:hover {
+  background-color: hsl(0 72% 51% / 0.3);
+  }
+
+  /* ── Responsive — moved to outside @layer to avoid @apply circular deps ── */
+
+.mobile-hotbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  padding-top: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+  .mobile-hotbar {
+    display: none;
+  }
+  }
+
+.hotbar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.25rem 0.75rem;
+  color: hsl(var(--muted-foreground));
+  transition: color 150ms ease;
+  min-height: auto;
+  min-width: auto;
+  }
+.hotbar-item.active {
+  color: hsl(var(--primary));
+  }
+.hotbar-item-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  }
+.hotbar-item-label {
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  }
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+  }
+
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+  }
+.scroll-reveal-item.scroll-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ── PM Responsive (outside @layer to avoid @apply circular deps) ── */
+@media (max-width: 1279px) {
+.pm-sports-layout {
+  grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+.pm-sports-layout {
+  grid-template-columns: 1fr !important;
+  }
+
+.pm-sports-sidebar {
+  position: static;
+  height: auto;
+  overflow-y: visible;
+  overflow-x: hidden;
+  border-right: none;
+  border-bottom: 1px solid hsl(var(--border));
+  }
+
+.pm-sidebar-nav {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.25rem;
+  padding: 0 0.75rem 0.75rem;
+  white-space: nowrap;
+  }
+
+.pm-sport-row {
+  display: inline-flex;
+  width: auto;
+  min-width: 100px;
+  flex-shrink: 0;
+  }
+
+.pm-board-header {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  }
+
+.pm-board-title {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  }
+
+.pm-league-header,
+.pm-market-head {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  }
+
+.pm-market-head {
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 0.9fr);
+  }
+.pm-market-head > :nth-child(3),
+.pm-market-head > :nth-child(4) {
+  display: none;
+  }
+
+.pm-match-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 0.9fr);
+  }
+.pm-match-grid > :nth-child(3),
+.pm-match-grid > :nth-child(4) {
+  display: none;
+  }
+
+.pm-odds-chip {
+  min-height: 28px;
+  padding: 0.25rem 0.5rem;
+  font-size: 11px;
+  }
+
+.pm-trade-card {
+  border-radius: 0.75rem;
+  }
+
+.pm-center-feed {
+  border-right: none;
+  }
+
+.pm-board-header > div:last-child {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  }
+.pm-board-header > div:last-child::-webkit-scrollbar {
+  display: none;
+  }
+}
+
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* MacBook optimizations */
+@media (min-width: 1440px) {
+  .container {
+  max-width: 1320px;
+  }
+}
+
+@media (min-width: 1680px) {
+  .container {
+  max-width: 1440px;
+  }
+}
+
+/* Mobile bottom padding for hotbar */
+@media (max-width: 767px) {
+  main {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Smooth scrolling with no global scroll lock */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  width: 100%;
+}
+
+/* Prevent iOS text selection zoom */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* Better touch targets on mobile - only for interactive elements, not category pills */
+@media (max-width: 767px) {
+.mobile-hotbar button {
+  min-height: 44px;
+  }
+}
+
+/* Page transition animations */
+.page-enter {
+  animation: page-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-exit {
+  animation: page-out 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: none;
+}
+
+@keyframes page-in {
+  from {
+  opacity: 0;
+  transform: translateY(6px) scale(0.995);
+  }
+  to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes page-out {
+  from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  }
+  to {
+  opacity: 0;
+  transform: translateY(-4px) scale(0.995);
+  }
+}

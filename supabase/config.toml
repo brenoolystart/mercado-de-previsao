@@ -1,0 +1,41 @@
+project_id = "aabktwppbonmlqagyhgv"
+
+[functions.fetch-polymarket]
+verify_jwt = false
+
+[functions.poll-ai-assistant]
+verify_jwt = false
+
+[functions.grok3-assistant]
+verify_jwt = false
+
+[functions.generate-pix]
+verify_jwt = false
+
+[functions.pixup-webhook]
+verify_jwt = false
+
+[functions.place-bet]
+verify_jwt = false
+
+[functions.resolve-market]
+verify_jwt = false
+
+[functions.request-withdrawal]
+verify_jwt = false
+
+[functions.process-withdrawal]
+verify_jwt = false
+
+[functions.auto-resolve-markets]
+verify_jwt = false
+
+[functions.verify-recaptcha]
+verify_jwt = false
+
+[functions.sell-position]
+verify_jwt = false
+
+[functions.verify-age-photo]
+verify_jwt = false
+
