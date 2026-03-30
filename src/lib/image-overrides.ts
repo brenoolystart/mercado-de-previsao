@@ -1229,7 +1229,7 @@ export function getImageOverride(label: string): string | null {
 export function overrideOptionImages<T extends { label: string; image?: string; icon?: string }>(options: T[]): T[] {
   return options.map(opt => {
     const override = getImageOverride(opt.label);
-    if (override) return { ...opt, icon: opt.icon || override, image: override };
+    if (override) return { ...opt, icon: override, image: override };
     return opt;
   });
 }
