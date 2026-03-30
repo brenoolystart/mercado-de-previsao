@@ -1125,14 +1125,57 @@ export function proxyImage(url: string | undefined | null): string {
   try {
     const hostname = new URL(normalizedUrl).hostname;
     // Avoid proxy chaining
-    if (hostname.includes('wsrv.nl')) return normalizedUrl;
-
-    // wsrv is currently denying Polymarket S3 assets (403), so keep direct source.
-    if (hostname.includes('polymarket-upload.s3.us-east-2.amazonaws.com')) return normalizedUrl;
+    if (hostname.includes('wsrv.nl') || hostname.includes('images.weserv.nl')) return normalizedUrl;
   } catch { return normalizedUrl; }
 
-  // Proxy all external URLs to avoid hotlink/CORS blocks (especially Polymarket S3)
-  return `https://wsrv.nl/?url=${encodeURIComponent(normalizedUrl)}&default=1`;
+  // Proxy all external URLs through wsrv.nl to avoid hotlink/CORS blocks
+  return `https://wsrv.nl/?url=${encodeURIComponent(normalizedUrl)}&default=1&n=-1`;
+}
+
+/**
+ * Global image error handler — retries failed images with/without proxy,
+ * and hides the element if all attempts fail.
+ */
+export function setupGlobalImageErrorHandler() {
+  if (typeof document === 'undefined') return;
+
+  document.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+
+    const src = target.src;
+    const retries = parseInt(target.dataset.imgRetry || '0', 10);
+
+    if (retries >= 2) {
+      // All retries exhausted — hide the image gracefully
+      target.style.display = 'none';
+      return;
+    }
+
+    target.dataset.imgRetry = String(retries + 1);
+
+    if (retries === 0) {
+      // First failure: if it was proxied, try direct; if direct, try proxied
+      if (src.includes('wsrv.nl')) {
+        // Extract original URL from proxy
+        try {
+          const proxyUrl = new URL(src);
+          const originalUrl = proxyUrl.searchParams.get('url');
+          if (originalUrl) {
+            target.src = originalUrl;
+            return;
+          }
+        } catch { /* fall through */ }
+      } else if (src.startsWith('http')) {
+        // Try proxying it
+        target.src = `https://wsrv.nl/?url=${encodeURIComponent(src)}&default=1&n=-1`;
+        return;
+      }
+    }
+
+    // Second failure or fallback: hide the element
+    target.style.display = 'none';
+  }, true); // capture phase to catch all img errors
 }
 
 function normalizeComparableUrl(url: string): string {
