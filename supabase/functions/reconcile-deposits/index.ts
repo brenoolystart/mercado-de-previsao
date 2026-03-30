@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
             target_id: deposit.id,
             old_data: { status: 'confirmed', gateway_balance: previousBalance },
             new_data: { status: 'paid', gateway_balance: newBalance, amount: Number(deposit.amount) },
-          }).catch(e => console.error('Audit log failed:', e));
+          }).then(r => r).catch((e: Error) => console.error('Audit log failed:', e));
 
         } else {
           // User wallet credit
@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
               balance_after: newBalance,
               description: `Depósito via PIX - ${deposit.external_id} (reconciliado)`,
               reference_id: deposit.id,
-            }).catch(e => console.error('Transaction insert failed:', e));
+            }).then(r => r).catch((e: Error) => console.error('Transaction insert failed:', e));
 
             console.log(`Wallet credited for deposit ${deposit.id}: +${deposit.amount}`);
           }

@@ -1150,13 +1150,13 @@ Deno.serve(async (req) => {
       if (m._isGrouped && m._groupedOptions) {
         isMultiOption = true;
         options = m._groupedOptions;
-        yesPercent = Math.round((options[0]?.price || 0.5) * 100);
+        yesPercent = Math.round((options?.[0]?.price || 0.5) * 100);
         noPercent = 100 - yesPercent;
 
         const volume = parseFloat(m.volume24hr || m.volume || '0');
-        const category = categorizeMarket(m, options.map((option: any) => option.label));
+        const category = categorizeMarket(m, options?.map((option: any) => option.label) || []);
         const sportInfo = category === 'sports'
-          ? inferSportInfo(m, options.map((option: any) => option.label))
+          ? inferSportInfo(m, options?.map((option: any) => option.label) || [])
           : null;
         const sportImage = resolveSportImage(sportImageMap, sportInfo?.sportKey);
         const seriesTitle = m.events?.[0]?.series?.[0]?.title || sportInfo?.sportLabel || undefined;
@@ -1179,7 +1179,7 @@ Deno.serve(async (req) => {
           sportLabel: sportInfo?.sportLabel,
           sportImage,
           seriesTitle,
-          image: m.icon || m.image || event?.icon || eventImageMap.get(String(m.events?.[0]?.id)) || sportImage || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop`,
+          image: m.icon || m.image || m.events?.[0]?.icon || eventImageMap.get(String(m.events?.[0]?.id)) || sportImage || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=400&fit=crop`,
           yesPercent,
           noPercent,
           volume: Math.round(volume),

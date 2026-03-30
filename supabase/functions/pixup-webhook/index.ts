@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
             target_id: 'gateway_balance',
             old_data: { value: previousBalance, deposit_id: deposit.id, external_id: deposit.external_id },
             new_data: { value: newBalance, deposit_amount: Number(deposit.amount), external_id: deposit.external_id, source: 'pix_gateway_funding' },
-          }).catch(e => console.error('Gateway audit log failed:', e));
+          }).then(r => r).catch((e: Error) => console.error('Gateway audit log failed:', e));
 
         console.log('Gateway funding credited:', externalId);
 
@@ -151,7 +151,7 @@ Deno.serve(async (req) => {
             balance_after: newBalance,
             description: `Depósito via PIX - ${externalId}`,
             reference_id: deposit.id,
-          }).catch(e => console.error('Transaction creation failed:', e));
+           }).then(r => r).catch((e: Error) => console.error('Transaction creation failed:', e));
 
           console.log('Deposit credited via user_id fallback:', externalId);
 
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
             balance_after: newBalance,
             description: `Depósito via PIX - ${externalId}`,
             reference_id: deposit.id,
-          }).catch(e => console.error('Transaction creation failed:', e));
+          }).then(r => r).catch((e: Error) => console.error('Transaction creation failed:', e));
 
           console.log('Deposit confirmed and wallet credited:', externalId);
         }
