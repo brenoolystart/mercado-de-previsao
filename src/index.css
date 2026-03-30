@@ -943,7 +943,7 @@ input, textarea, select {
   @apply bg-card border border-border rounded-lg p-2 md:p-3 w-[180px] md:w-[210px] transition-shadow hover:shadow-md hover:border-primary/30;
 }
 .bracket-matchup-live {
-  @apply ring-1 ring-hsl(var(--red));
+  @apply ring-1 ring-red;
 }
 .bracket-status {
   @apply block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1;
