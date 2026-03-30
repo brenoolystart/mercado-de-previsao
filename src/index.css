@@ -914,3 +914,93 @@ input, textarea, select {
   transform: translateY(-4px) scale(0.995);
   }
 }
+
+/* ── NCAA Bracket Styles ── */
+.bracket-hero {
+  @apply relative overflow-hidden py-8 md:py-12;
+  background: linear-gradient(135deg, hsl(221 83% 20%), hsl(221 83% 35%), hsl(199 89% 30%));
+}
+.bracket-hero-decoration {
+  @apply absolute inset-0 opacity-10;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 80px, hsl(var(--primary)/0.3) 80px, hsl(var(--primary)/0.3) 81px),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, hsl(var(--primary)/0.3) 60px, hsl(var(--primary)/0.3) 61px);
+}
+
+.bracket-region {
+  @apply overflow-x-auto pb-4;
+}
+.bracket-rounds {
+  @apply flex gap-4 md:gap-6 items-start min-w-max;
+}
+.bracket-column {
+  @apply flex flex-col justify-around min-w-[180px] md:min-w-[210px];
+}
+.bracket-matchup-wrapper {
+  @apply relative;
+}
+.bracket-matchup {
+  @apply bg-card border border-border rounded-lg p-2 md:p-3 w-[180px] md:w-[210px] transition-shadow hover:shadow-md hover:border-primary/30;
+}
+.bracket-matchup-live {
+  @apply ring-1 ring-hsl(var(--red));
+}
+.bracket-status {
+  @apply block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1;
+}
+.bracket-team {
+  @apply flex items-center justify-between py-1;
+}
+.bracket-team-winner {
+  @apply text-foreground;
+}
+.bracket-team-info {
+  @apply flex items-center gap-2 min-w-0;
+}
+.bracket-seed {
+  @apply text-[10px] font-bold text-muted-foreground w-4 text-center shrink-0;
+}
+.bracket-team-name {
+  @apply text-xs md:text-sm text-muted-foreground truncate;
+}
+.bracket-score {
+  @apply text-xs md:text-sm tabular-nums text-muted-foreground ml-2;
+}
+.bracket-final-four {
+  @apply flex flex-col items-center;
+}
+
+/* NCAA Card animation on homepage */
+.ncaa-bracket-card {
+  @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(221,83%,25%)] to-[hsl(221,83%,40%)] p-4 md:p-6 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-xl;
+  min-height: 160px;
+}
+.ncaa-bracket-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-[0.08];
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 40px, white 40px, white 41px),
+    repeating-linear-gradient(0deg, transparent, transparent 30px, white 30px, white 31px);
+  animation: ncaa-grid-scroll 20s linear infinite;
+}
+@keyframes ncaa-grid-scroll {
+  from { transform: translate(0, 0); }
+  to { transform: translate(40px, 30px); }
+}
+.ncaa-mini-bracket {
+  @apply flex items-center gap-1 md:gap-2;
+}
+.ncaa-mini-matchup {
+  @apply bg-white/10 backdrop-blur-sm rounded-md px-2 py-1 text-[10px] md:text-xs text-white/80 font-medium;
+  animation: ncaa-matchup-pop 0.4s ease-out both;
+}
+.ncaa-mini-matchup:nth-child(1) { animation-delay: 0.1s; }
+.ncaa-mini-matchup:nth-child(2) { animation-delay: 0.2s; }
+.ncaa-mini-matchup:nth-child(3) { animation-delay: 0.35s; }
+.ncaa-mini-connector {
+  @apply w-3 md:w-5 h-px bg-white/30;
+}
+@keyframes ncaa-matchup-pop {
+  from { opacity: 0; transform: scale(0.8) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
