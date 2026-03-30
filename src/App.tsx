@@ -32,6 +32,7 @@ import Terms from "./pages/Terms";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Explore from "./pages/Explore";
+import Bracket from "./pages/Bracket";
 import PoliticsPage from "./pages/categories/PoliticsPage";
 import CryptoPage from "./pages/categories/CryptoPage";
 import FinancePage from "./pages/categories/FinancePage";
@@ -68,6 +69,7 @@ const AppRoutes = () => {
           <Route path="/docs" element={<Docs />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/bracket" element={<Bracket />} />
           <Route path="/politics" element={<PoliticsPage />} />
           <Route path="/crypto" element={<CryptoPage />} />
           <Route path="/finance" element={<FinancePage />} />
