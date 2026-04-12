@@ -47,12 +47,12 @@ export function MarketsGrid({ markets, loading, error, groupByCategory = false }
         <h2 className="text-xl font-bold text-foreground mb-4">{t('markets.polls')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-card border border-border rounded-lg p-4">
+            <div key={i} className="bg-card border border-border rounded-2xl p-4">
               <div className="flex gap-3 mb-3">
-                <Skeleton className="w-12 h-12 rounded-lg" />
-                <div className="flex-1 space-y-2"><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-3/4" /></div>
+                <Skeleton className="w-12 h-12 rounded-full" />
+                <div className="flex-1 space-y-2"><Skeleton className="h-4 w-full rounded-full" /><Skeleton className="h-4 w-3/4 rounded-full" /></div>
               </div>
-              <div className="space-y-2"><Skeleton className="h-10 w-full rounded" /><Skeleton className="h-10 w-full rounded" /></div>
+              <div className="space-y-2"><Skeleton className="h-10 w-full rounded-full" /><Skeleton className="h-10 w-full rounded-full" /></div>
             </div>
           ))}
         </div>
