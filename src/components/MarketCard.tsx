@@ -174,7 +174,7 @@ export function MarketCard({ market }: MarketCardProps) {
         ) : (
           <div className="grid grid-cols-2 gap-2">
             <button
-              className="py-2.5 rounded-lg text-[13px] font-bold transition-all duration-150 hover:brightness-110"
+              className="py-2.5 rounded-full text-[13px] font-bold transition-all duration-150 hover:brightness-110"
               style={{
                 backgroundColor: yesTeamColor ? `hsla(${yesTeamColor} / 0.15)` : 'hsla(152, 69%, 36%, 0.15)',
                 color: yesTeamColor ? `hsl(${yesTeamColor})` : 'hsl(152, 69%, 46%)',
@@ -182,7 +182,7 @@ export function MarketCard({ market }: MarketCardProps) {
               onClick={(e) => { e.stopPropagation(); handleClick(); }}
             >{yesLabel} {yesPercent}%</button>
             <button
-              className="py-2.5 rounded-lg text-[13px] font-bold transition-all duration-150 hover:brightness-110"
+              className="py-2.5 rounded-full text-[13px] font-bold transition-all duration-150 hover:brightness-110"
               style={{
                 backgroundColor: noTeamColor ? `hsla(${noTeamColor} / 0.15)` : 'hsla(0, 72%, 51%, 0.15)',
                 color: noTeamColor ? `hsl(${noTeamColor})` : 'hsl(0, 72%, 60%)',
