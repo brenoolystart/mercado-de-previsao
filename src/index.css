@@ -976,14 +976,31 @@ input, textarea, select {
   @apply flex flex-col items-center;
 }
 
-/* NCAA Card animation on homepage */
 /* Picked for you cards */
 .picked-card {
-  @apply bg-card border border-border rounded-xl p-4 cursor-pointer transition-all hover:border-primary/40 hover:shadow-md flex flex-col;
+  @apply bg-card border border-border rounded-2xl p-4 cursor-pointer transition-all hover:border-primary/40 hover:shadow-md flex flex-col;
 }
 .picked-btn-yes {
-  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 transition-colors;
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 transition-colors;
 }
 .picked-btn-no {
-  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors;
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded-full bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors;
+}
+
+/* Mobile & Tablet responsive refinements */
+@media (max-width: 1023px) {
+  .market-card {
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  .picked-card {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .market-card {
+    border-radius: 1rem;
+    padding: 0.875rem;
+  }
 }
