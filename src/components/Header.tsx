@@ -102,8 +102,8 @@ export function Header({ isDark, toggleDarkMode, onSearch, onCategoryChange, mar
             />
           </Link>
 
-          {/* Search — Polymarket proportions */}
-          <div className="flex-1 hidden sm:block" data-tour="search">
+          {/* Search — visible on all sizes like Polymarket */}
+          <div className="flex-1" data-tour="search">
             <SearchDropdown onSearch={onSearch} onCategoryChange={onCategoryChange} markets={markets} />
           </div>
 

@@ -143,14 +143,14 @@
 }
 
 .market-card {
-  @apply bg-card border border-border/60 rounded-xl p-3.5 cursor-pointer transition-all duration-200 ease-out;
+  @apply bg-card border border-border/60 rounded-2xl p-4 cursor-pointer transition-all duration-200 ease-out;
   }
 .market-card:hover {
   @apply border-border bg-accent/30;
   }
 
 .option-btn-yes {
-  @apply px-3 py-1 text-xs font-semibold rounded-md transition-colors;
+  @apply px-3 py-1 text-xs font-semibold rounded-full transition-colors;
   background-color: hsl(var(--green) / 0.15);
   color: hsl(var(--green));
   border: 1px solid hsl(var(--green) / 0.3);
@@ -160,7 +160,7 @@
   }
 
 .option-btn-no {
-  @apply px-3 py-1 text-xs font-semibold rounded-md transition-colors;
+  @apply px-3 py-1 text-xs font-semibold rounded-full transition-colors;
   background-color: hsl(var(--red) / 0.15);
   color: hsl(var(--red));
   border: 1px solid hsl(var(--red) / 0.3);
@@ -678,14 +678,18 @@
   align-items: center;
   justify-content: space-around;
   border-top: 1px solid hsl(var(--border));
-  background-color: hsl(var(--card));
-  padding-left: 1rem;
-  padding-right: 1rem;
+  background-color: hsl(var(--card) / 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   padding-top: 0.5rem;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
   .mobile-hotbar {
     display: none;
   }
@@ -696,14 +700,16 @@
   flex-direction: column;
   align-items: center;
   gap: 0.125rem;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   color: hsl(var(--muted-foreground));
   transition: color 150ms ease;
   min-height: auto;
   min-width: auto;
+  border-radius: 0.75rem;
   }
 .hotbar-item.active {
   color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.08);
   }
 .hotbar-item-icon {
   width: 1.25rem;
@@ -849,9 +855,9 @@ body {
 }
 
 /* Mobile bottom padding for hotbar */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   main {
-  padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -876,8 +882,8 @@ input, textarea, select {
   font-size: 16px !important;
 }
 
-/* Better touch targets on mobile - only for interactive elements, not category pills */
-@media (max-width: 767px) {
+/* Better touch targets on mobile */
+@media (max-width: 1023px) {
 .mobile-hotbar button {
   min-height: 44px;
   }
@@ -970,14 +976,31 @@ input, textarea, select {
   @apply flex flex-col items-center;
 }
 
-/* NCAA Card animation on homepage */
 /* Picked for you cards */
 .picked-card {
-  @apply bg-card border border-border rounded-xl p-4 cursor-pointer transition-all hover:border-primary/40 hover:shadow-md flex flex-col;
+  @apply bg-card border border-border rounded-2xl p-4 cursor-pointer transition-all hover:border-primary/40 hover:shadow-md flex flex-col;
 }
 .picked-btn-yes {
-  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 transition-colors;
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 transition-colors;
 }
 .picked-btn-no {
-  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors;
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded-full bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors;
+}
+
+/* Mobile & Tablet responsive refinements */
+@media (max-width: 1023px) {
+  .market-card {
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  .picked-card {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .market-card {
+    border-radius: 1rem;
+    padding: 0.875rem;
+  }
 }

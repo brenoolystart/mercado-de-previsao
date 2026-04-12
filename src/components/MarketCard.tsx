@@ -140,7 +140,7 @@ export function MarketCard({ market }: MarketCardProps) {
 
       {/* Live Score Banner for sports */}
       {isSportsMarket && isLive && market.liveScores && market.liveScores.length >= 2 && (
-        <div className="mb-2 rounded-md border border-red-500/20 bg-red-500/5 p-2">
+        <div className="mb-2 rounded-xl border border-red-500/20 bg-red-500/5 p-2">
           <div className="flex items-center gap-1.5 mb-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider">Ao Vivo</span>
@@ -174,7 +174,7 @@ export function MarketCard({ market }: MarketCardProps) {
         ) : (
           <div className="grid grid-cols-2 gap-2">
             <button
-              className="py-2.5 rounded-lg text-[13px] font-bold transition-all duration-150 hover:brightness-110"
+              className="py-2.5 rounded-full text-[13px] font-bold transition-all duration-150 hover:brightness-110"
               style={{
                 backgroundColor: yesTeamColor ? `hsla(${yesTeamColor} / 0.15)` : 'hsla(152, 69%, 36%, 0.15)',
                 color: yesTeamColor ? `hsl(${yesTeamColor})` : 'hsl(152, 69%, 46%)',
@@ -182,7 +182,7 @@ export function MarketCard({ market }: MarketCardProps) {
               onClick={(e) => { e.stopPropagation(); handleClick(); }}
             >{yesLabel} {yesPercent}%</button>
             <button
-              className="py-2.5 rounded-lg text-[13px] font-bold transition-all duration-150 hover:brightness-110"
+              className="py-2.5 rounded-full text-[13px] font-bold transition-all duration-150 hover:brightness-110"
               style={{
                 backgroundColor: noTeamColor ? `hsla(${noTeamColor} / 0.15)` : 'hsla(0, 72%, 51%, 0.15)',
                 color: noTeamColor ? `hsl(${noTeamColor})` : 'hsl(0, 72%, 60%)',

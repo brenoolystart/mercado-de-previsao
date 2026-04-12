@@ -425,7 +425,7 @@ const Index = () => {
                   {featuredMarket && top3Markets.length > 0 && (
                     <div className="pt-3 pb-3">
                       <div className="flex flex-col lg:flex-row gap-4">
-                        <div className="flex-1 min-w-0 bg-card border border-border rounded-lg p-4">
+                        <div className="flex-1 min-w-0 bg-card border border-border rounded-2xl p-4">
                           <FeaturedMarket market={featuredMarket} />
                           {top3Markets.length > 1 && (
                             <div className="flex items-center justify-center gap-1.5 mt-4">

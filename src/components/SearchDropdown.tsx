@@ -109,7 +109,7 @@ export function SearchDropdown({ onSearch, onCategoryChange, markets = [], class
           value={query}
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
-          className="pl-10 pr-8 bg-secondary border-border"
+          className="pl-10 pr-8 bg-secondary border-border rounded-full"
         />
         {query && (
           <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2">
