@@ -140,7 +140,7 @@ export function MarketCard({ market }: MarketCardProps) {
 
       {/* Live Score Banner for sports */}
       {isSportsMarket && isLive && market.liveScores && market.liveScores.length >= 2 && (
-        <div className="mb-2 rounded-md border border-red-500/20 bg-red-500/5 p-2">
+        <div className="mb-2 rounded-xl border border-red-500/20 bg-red-500/5 p-2">
           <div className="flex items-center gap-1.5 mb-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider">Ao Vivo</span>
