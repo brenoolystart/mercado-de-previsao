@@ -971,36 +971,13 @@ input, textarea, select {
 }
 
 /* NCAA Card animation on homepage */
-.ncaa-bracket-card {
-  @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(221,83%,25%)] to-[hsl(221,83%,40%)] p-4 md:p-6 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-xl;
-  min-height: 160px;
+/* Picked for you cards */
+.picked-card {
+  @apply bg-card border border-border rounded-xl p-4 cursor-pointer transition-all hover:border-primary/40 hover:shadow-md flex flex-col;
 }
-.ncaa-bracket-card::before {
-  content: '';
-  @apply absolute inset-0 opacity-[0.08];
-  background-image:
-    repeating-linear-gradient(90deg, transparent, transparent 40px, white 40px, white 41px),
-    repeating-linear-gradient(0deg, transparent, transparent 30px, white 30px, white 31px);
-  animation: ncaa-grid-scroll 20s linear infinite;
+.picked-btn-yes {
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500 hover:bg-emerald-500/25 transition-colors;
 }
-@keyframes ncaa-grid-scroll {
-  from { transform: translate(0, 0); }
-  to { transform: translate(40px, 30px); }
-}
-.ncaa-mini-bracket {
-  @apply flex items-center gap-1 md:gap-2;
-}
-.ncaa-mini-matchup {
-  @apply bg-white/10 backdrop-blur-sm rounded-md px-2 py-1 text-[10px] md:text-xs text-white/80 font-medium;
-  animation: ncaa-matchup-pop 0.4s ease-out both;
-}
-.ncaa-mini-matchup:nth-child(1) { animation-delay: 0.1s; }
-.ncaa-mini-matchup:nth-child(2) { animation-delay: 0.2s; }
-.ncaa-mini-matchup:nth-child(3) { animation-delay: 0.35s; }
-.ncaa-mini-connector {
-  @apply w-3 md:w-5 h-px bg-white/30;
-}
-@keyframes ncaa-matchup-pop {
-  from { opacity: 0; transform: scale(0.8) translateY(4px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+.picked-btn-no {
+  @apply text-xs font-semibold px-2.5 py-0.5 rounded bg-destructive/15 text-destructive hover:bg-destructive/25 transition-colors;
 }
