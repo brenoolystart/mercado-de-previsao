@@ -12,7 +12,7 @@ import { Footer } from '@/components/Footer';
 import { DemoModeBanner } from '@/components/DemoModeBanner';
 import { GuidedTour } from '@/components/GuidedTour';
 import { SportsHub } from '@/components/SportsHub';
-import { NCAATournamentCard } from '@/components/NCAATournamentCard';
+import { PickedForYou } from '@/components/PickedForYou';
 import { SportsMarketsFeed } from '@/components/SportsMarketsFeed';
 import { SportsTradePanel } from '@/components/SportsTradePanel';
 import { CryptoHub } from '@/components/CryptoHub';
@@ -480,10 +480,8 @@ const Index = () => {
                     </div>
                   )}
 
-                  {/* NCAA Tournament Card */}
-                  <div className="my-4">
-                    <NCAATournamentCard />
-                  </div>
+                  {/* Picked for you */}
+                  <PickedForYou markets={translatedMarkets} />
 
                   <div className="w-full">
                     <MarketsGrid markets={remainingMarkets} loading={loading} error={error} groupByCategory={showGrouped} />
