@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { Star, Bookmark, TrendingUp, Landmark, Trophy, Bitcoin, Globe, Cpu, Palette, BarChart3, Zap, Sparkles, FileText, Radio, ChevronDown } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { PredictionMarket } from '@/hooks/useNews';
 import { getMarketImageOverride, getOptionImageSource, overrideOptionImages, proxyImage } from '@/lib/image-overrides';
 import { LiveIndicator } from '@/components/LiveIndicator';
 import { getTeamColor } from '@/lib/team-colors';
+import { generateInitialsAvatar, createImageFallback } from '@/lib/image-fallback';
 
 interface MarketCardProps {
   market: PredictionMarket;
@@ -37,6 +38,7 @@ function formatNumber(num: number): string {
   return num.toString();
 }
 
+/* ── Multi-option: Polymarket-style vertical list with progress bars ── */
 function MultiOptionDisplay({ options, eventImage, onOptionClick }: {
   options: { label: string; price: number; color?: string; icon?: string; image?: string }[];
   eventImage?: string;
@@ -44,26 +46,56 @@ function MultiOptionDisplay({ options, eventImage, onOptionClick }: {
 }) {
   return (
     <div className="relative">
-      <div className="space-y-0.5 max-h-[72px] overflow-y-auto scrollbar-none hover:scrollbar-thin scroll-smooth" style={{ scrollbarWidth: 'none' }}>
+      <div className="space-y-0.5 max-h-[120px] overflow-y-auto scrollbar-none hover:scrollbar-thin scroll-smooth" style={{ scrollbarWidth: 'none' }}>
         <style>{`.scrollbar-none::-webkit-scrollbar { display: none; } .scrollbar-none:hover::-webkit-scrollbar { display: block; width: 3px; } .scrollbar-none:hover::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.3); border-radius: 10px; } .scrollbar-none:hover::-webkit-scrollbar-track { background: transparent; }`}</style>
         {options.map((option, idx) => {
           const percent = Math.round(option.price * 100);
           const optionImage = getOptionImageSource(option, eventImage);
           return (
-            <div key={idx} className="flex items-center gap-2 py-1 cursor-pointer hover:bg-secondary/30 rounded transition-colors px-1" onClick={onOptionClick}>
-              {optionImage && (
-                <img src={proxyImage(optionImage)} alt="" className="w-5 h-5 rounded-full object-cover shrink-0 border border-border" loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
-              )}
-              <span className="text-[12px] text-foreground font-medium truncate min-w-0 flex-1">{option.label}</span>
-              <span className="text-[12px] font-bold text-foreground tabular-nums shrink-0">{percent < 1 ? '<1' : percent}%</span>
-              <button className="px-2 py-0.5 text-[10px] font-semibold rounded transition-colors shrink-0" style={{ backgroundColor: 'hsla(152, 69%, 36%, 0.2)', color: 'hsl(152, 69%, 46%)' }} onClick={(e) => { e.stopPropagation(); onOptionClick(); }}>Sim</button>
-              <button className="px-2 py-0.5 text-[10px] font-semibold rounded transition-colors shrink-0" style={{ backgroundColor: 'hsla(0, 72%, 51%, 0.2)', color: 'hsl(0, 72%, 60%)' }} onClick={(e) => { e.stopPropagation(); onOptionClick(); }}>Não</button>
+            <div
+              key={idx}
+              className="relative flex items-center gap-2.5 py-2 px-2 cursor-pointer rounded-lg transition-colors hover:bg-secondary/40 overflow-hidden"
+              onClick={onOptionClick}
+            >
+              {/* Progress bar background */}
+              <div
+                className="absolute inset-0 rounded-lg transition-all"
+                style={{
+                  background: `hsl(var(--primary) / 0.08)`,
+                  width: `${Math.max(percent, 2)}%`,
+                }}
+              />
+              {/* Content */}
+              <div className="relative flex items-center gap-2.5 flex-1 min-w-0 z-10">
+                {optionImage ? (
+                  <img
+                    src={proxyImage(optionImage)}
+                    alt=""
+                    className="w-6 h-6 rounded-full object-cover shrink-0 border border-border"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = generateInitialsAvatar(option.label, 24);
+                      e.currentTarget.onerror = null;
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={generateInitialsAvatar(option.label, 24)}
+                    alt=""
+                    className="w-6 h-6 rounded-full shrink-0"
+                  />
+                )}
+                <span className="text-[12px] text-foreground font-medium truncate min-w-0 flex-1">{option.label}</span>
+              </div>
+              <span className="relative text-[13px] font-bold text-foreground tabular-nums shrink-0 z-10">
+                {percent < 1 ? '<1' : percent}%
+              </span>
             </div>
           );
         })}
       </div>
-      {options.length > 3 && (
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-card to-transparent" />
+      {options.length > 4 && (
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-5 bg-gradient-to-t from-card to-transparent" />
       )}
     </div>
   );
@@ -122,15 +154,32 @@ export function MarketCard({ market }: MarketCardProps) {
   const noTeamColor = useMemo(() => getTeamColor(noLabel), [noLabel]);
   const isSportsMarket = market.category === 'sports' || !!market.sportKey;
 
+  const imgFallback = useMemo(() => createImageFallback(market.question, market.imageUrl), [market.question, market.imageUrl]);
+
   return (
     <div onClick={handleClick} className="market-card animate-fade-in relative">
       {/* Header: image + title */}
       <div className="flex items-start gap-3 mb-3">
         <div className="w-10 h-10 rounded-full bg-secondary overflow-hidden shrink-0">
           {!imageError ? (
-            <img src={proxyImage(resolvedImage)} alt="" className="w-full h-full object-cover" onError={() => setImageError(true)} loading="lazy" />
+            <img
+              src={proxyImage(resolvedImage)}
+              alt=""
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const img = e.currentTarget;
+                // Try initials avatar
+                img.src = generateInitialsAvatar(market.question, 40);
+                img.onerror = null;
+              }}
+              loading="lazy"
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-secondary"><CategoryIcon className="w-4 h-4 text-muted-foreground" /></div>
+            <img
+              src={generateInitialsAvatar(market.question, 40)}
+              alt=""
+              className="w-full h-full object-cover"
+            />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -167,7 +216,7 @@ export function MarketCard({ market }: MarketCardProps) {
         </div>
       )}
 
-      {/* Botões Sim/Não */}
+      {/* Options / Buttons */}
       <div className="mb-2">
         {isMultiOption ? (
           <MultiOptionDisplay options={resolvedOptions!} eventImage={market.imageUrl} onOptionClick={handleClick} />
