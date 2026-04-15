@@ -517,15 +517,16 @@ export function FeaturedMarket({ market }: FeaturedMarketProps) {
             </div>
             <PredictionMarketChart
               data={liveCryptoChart}
-              lines={[{ key: 'price', label: 'BTC', color: '#facc15' }]}
+              lines={[{ key: 'price', label: 'BTC', color: priceDiff >= 0 ? '#22c55e' : '#ef4444' }]}
               height={200}
               domain={['auto', 'auto']}
-              yFormatter={(v) => `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`}
+              yFormatter={(v) => `R$ ${v.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
               showDates={true}
               wsSymbol="btcusdt"
               wsTargetKey="price"
               targetPrice={targetPrice}
               targetLabel="Target"
+              startPrice={btcStartPrice || undefined}
             />
           </div>
         </div>
