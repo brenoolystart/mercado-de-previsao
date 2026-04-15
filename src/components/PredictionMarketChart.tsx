@@ -358,7 +358,7 @@ export function PredictionMarketChart({
       seriesMapRef.current.clear();
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [lines.map(l => l.key + l.color).join(','), isPercentDomain, showDates, height, targetPrice, useAreaSeries, isCandlestick]);
+  }, [lines.map(l => l.key + l.color).join(','), isPercentDomain, showDates, height, targetPrice, startPrice, useAreaSeries, isCandlestick]);
 
   useEffect(() => {
     if (!chartRef.current || seriesMapRef.current.size === 0) return;
