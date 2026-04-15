@@ -287,54 +287,55 @@ export default function MarketDetail() {
               <div className="bg-card border border-border rounded-xl overflow-hidden">
                 <div className="px-4 pt-4 pb-2 flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Preço em Tempo Real</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
+                      <span className="text-[11px] font-bold text-green uppercase tracking-wide">AO VIVO</span>
+                    </div>
                     {cryptoData && (
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-lg md:text-2xl font-bold text-foreground tabular-nums">
-                          {formatCryptoPrice(cryptoData.currentPrice)}
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Preço Inicial</div>
+                          <span className="text-sm font-bold text-foreground tabular-nums">
+                            {formatCryptoPrice(cryptoData.priceHistory?.[0]?.open || cryptoData.currentPrice)}
+                          </span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                          cryptoData.priceChange24h >= 0 ? 'bg-green/15 text-green' : 'bg-red/15 text-red'
+                        }`}>
+                          {cryptoData.priceChange24h >= 0 ? '▲' : '▼'} {Math.abs(cryptoData.priceChange24h).toFixed(2)}%
                         </span>
-                        <span className={`text-sm font-semibold ${cryptoData.priceChange24h >= 0 ? 'text-green' : 'text-red'}`}>
-                          {cryptoData.priceChange24h >= 0 ? '+' : ''}{cryptoData.priceChange24h.toFixed(2)}%
-                        </span>
+                        <div>
+                          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Preço Atual</div>
+                          <span className={`text-sm font-bold tabular-nums ${cryptoData.priceChange24h >= 0 ? 'text-green' : 'text-red'}`}>
+                            {formatCryptoPrice(cryptoData.currentPrice)}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1 bg-secondary/60 rounded-lg p-0.5">
-                      <button
-                        onClick={() => setChartMode('area')}
-                        className={`p-1.5 rounded-md transition-colors ${
-                          chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                        }`}
-                        title="Gráfico de Área"
-                      >
+                      <button onClick={() => setChartMode('area')}
+                        className={`p-1.5 rounded-md transition-colors ${chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                         <LineChart className="h-3.5 w-3.5" />
                       </button>
-                      <button
-                        onClick={() => setChartMode('candlestick')}
-                        className={`p-1.5 rounded-md transition-colors ${
-                          chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                        }`}
-                        title="Candlestick"
-                      >
+                      <button onClick={() => setChartMode('candlestick')}
+                        className={`p-1.5 rounded-md transition-colors ${chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                         <BarChart3 className="h-3.5 w-3.5" />
                       </button>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Radio className="w-3 h-3 text-red animate-pulse" />
-                      <span className="text-[11px] font-semibold text-red">AO VIVO</span>
                     </div>
                   </div>
                 </div>
                 <div className="w-full">
                   <PredictionMarketChart
                     data={cryptoChartData}
-                    lines={[{ key: 'price', label: cryptoSymbol?.replace('USDT', '') || 'BTC', color: '#f59e0b' }]}
+                    lines={[{ key: 'price', label: cryptoSymbol?.replace('USDT', '') || 'BTC', color: cryptoData && cryptoData.priceChange24h >= 0 ? '#22c55e' : '#ef4444' }]}
                     height={isMobile ? 180 : 250}
                     showDates={true}
                     domain={['auto', 'auto']}
                     yFormatter={(v) => formatCryptoPrice(v)}
                     chartType={chartMode}
+                    startPrice={cryptoData?.priceHistory?.[0]?.open}
                   />
                 </div>
               </div>
