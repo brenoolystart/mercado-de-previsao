@@ -219,13 +219,13 @@ export function PredictionMarketChart({
           priceFormat: priceFormatOpts,
         });
       } else if (useAreaSeries) {
-        // Area series with gradient fill — mimics Polymarket style
+        // Area series with gradient fill — Palpitano style (stronger gradient)
         series = chart.addSeries(AreaSeries, {
           lineColor: color,
           lineWidth: 2,
           lineType: 2,
-          topColor: hexToRgba(color, 0.28),
-          bottomColor: hexToRgba(color, 0.0),
+          topColor: hexToRgba(color, 0.38),
+          bottomColor: hexToRgba(color, 0.02),
           crosshairMarkerVisible: true,
           crosshairMarkerRadius: 5,
           crosshairMarkerBorderWidth: 2,
