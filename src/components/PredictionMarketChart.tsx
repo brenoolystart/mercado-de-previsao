@@ -42,6 +42,8 @@ interface PredictionMarketChartProps {
   targetPrice?: number;
   targetLabel?: string;
   chartType?: 'area' | 'candlestick';
+  /** Reference price drawn as a dashed horizontal line (Palpitano style) */
+  startPrice?: number;
 }
 
 const DEFAULT_COLORS = ['#3b82f6', '#facc15', '#fb923c', '#22c55e', '#ef4444'];
