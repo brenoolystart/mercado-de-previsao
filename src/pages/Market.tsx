@@ -432,45 +432,63 @@ export default function Market() {
             <div className="bg-card border border-border rounded-xl p-4">
               {isCrypto && cryptoChartData.length > 0 ? (
                 <>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><TrendingUp className="h-3.5 w-3.5" />R${formatNumber(volume)} Vol.</span>
-                      {cryptoData && (
-                        <span className={`font-semibold ${cryptoData.priceChange24h >= 0 ? 'text-green' : 'text-red'}`}>
-                          {cryptoData.priceChange24h >= 0 ? '+' : ''}{cryptoData.priceChange24h.toFixed(2)}% 24h
-                        </span>
+                  {/* Palpitano-style header */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
+                        <span className="text-[11px] font-bold text-green uppercase tracking-wide">AO VIVO</span>
+                      </div>
+                      {/* Last candle results */}
+                      {cryptoData && cryptoData.priceHistory.length > 0 && (
+                        <div className="flex items-center gap-0.5">
+                          <span className="text-[11px] text-muted-foreground mr-1">Últimos</span>
+                          {cryptoData.priceHistory.slice(-6).map((c, i) => (
+                            <span key={i} className={`w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center ${
+                              c.close >= c.open ? 'bg-green/20 text-green' : 'bg-red/20 text-red'
+                            }`}>
+                              {c.close >= c.open ? '▲' : '▼'}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1 bg-secondary/60 rounded-lg p-0.5">
-                        <button
-                          onClick={() => setChartMode('area')}
-                          className={`p-1.5 rounded-md transition-colors ${
-                            chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                          title="Gráfico de Área"
-                        >
+                        <button onClick={() => setChartMode('area')}
+                          className={`p-1.5 rounded-md transition-colors ${chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                           <LineChart className="h-3.5 w-3.5" />
                         </button>
-                        <button
-                          onClick={() => setChartMode('candlestick')}
-                          className={`p-1.5 rounded-md transition-colors ${
-                            chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                          title="Candlestick"
-                        >
+                        <button onClick={() => setChartMode('candlestick')}
+                          className={`p-1.5 rounded-md transition-colors ${chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                           <BarChart3 className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <Radio className="w-3 h-3 text-red animate-pulse" />
-                        <span className="text-[11px] font-semibold text-red">AO VIVO</span>
-                      </div>
                     </div>
                   </div>
+                  {/* PREÇO INICIAL / PREÇO ATUAL */}
+                  {cryptoData && startPrice && (
+                    <div className="flex items-center justify-between mb-3 text-xs">
+                      <div>
+                        <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Preço Inicial</div>
+                        <div className="font-bold text-foreground">R$ {startPrice.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}</div>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-full font-bold ${
+                        cryptoData.currentPrice >= startPrice ? 'bg-green/15 text-green' : 'bg-red/15 text-red'
+                      }`}>
+                        {cryptoData.currentPrice >= startPrice ? '▲' : '▼'} R$ {Math.abs(cryptoData.currentPrice - startPrice).toFixed(0)}
+                      </span>
+                      <div className="text-right">
+                        <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Preço Atual</div>
+                        <div className={`font-bold ${cryptoData.currentPrice >= startPrice ? 'text-green' : 'text-red'}`}>
+                          R$ {cryptoData.currentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <PredictionMarketChart
                     data={cryptoChartData}
-                    lines={[{ key: 'price', label: cryptoSymbol?.replace('USDT', '') || 'BTC', color: '#f59e0b' }]}
+                    lines={[{ key: 'price', label: cryptoSymbol?.replace('USDT', '') || 'BTC', color: cryptoData && startPrice && cryptoData.currentPrice >= startPrice ? '#22c55e' : '#ef4444' }]}
                     height={isMobile ? 220 : 350}
                     showDates={true}
                     domain={['auto', 'auto']}
@@ -478,6 +496,7 @@ export default function Market() {
                     targetPrice={targetPrice || undefined}
                     targetLabel="Target"
                     chartType={chartMode}
+                    startPrice={startPrice || undefined}
                   />
                 </>
               ) : (
