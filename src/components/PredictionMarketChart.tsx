@@ -69,6 +69,7 @@ export function PredictionMarketChart({
   targetPrice,
   targetLabel = 'Target',
   chartType = 'area',
+  startPrice,
 }: PredictionMarketChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
