@@ -266,6 +266,18 @@ export function PredictionMarketChart({
         });
       }
 
+      // Add start price reference line (Palpitano style)
+      if (idx === 0 && startPrice != null) {
+        series.createPriceLine({
+          price: startPrice,
+          color: 'rgba(255,255,255,0.18)',
+          lineWidth: 1,
+          lineStyle: LineStyle.Dashed,
+          axisLabelVisible: true,
+          title: '',
+        });
+      }
+
       // Subtle percentage grid lines for prediction markets
       if (idx === 0 && isPercentDomain) {
         [0, 25, 50, 75, 100].forEach(level => {
