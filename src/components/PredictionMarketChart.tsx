@@ -42,6 +42,8 @@ interface PredictionMarketChartProps {
   targetPrice?: number;
   targetLabel?: string;
   chartType?: 'area' | 'candlestick';
+  /** Reference price drawn as a dashed horizontal line (Palpitano style) */
+  startPrice?: number;
 }
 
 const DEFAULT_COLORS = ['#3b82f6', '#facc15', '#fb923c', '#22c55e', '#ef4444'];
@@ -67,6 +69,7 @@ export function PredictionMarketChart({
   targetPrice,
   targetLabel = 'Target',
   chartType = 'area',
+  startPrice,
 }: PredictionMarketChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -216,13 +219,13 @@ export function PredictionMarketChart({
           priceFormat: priceFormatOpts,
         });
       } else if (useAreaSeries) {
-        // Area series with gradient fill — mimics Polymarket style
+        // Area series with gradient fill — Palpitano style (stronger gradient)
         series = chart.addSeries(AreaSeries, {
           lineColor: color,
           lineWidth: 2,
           lineType: 2,
-          topColor: hexToRgba(color, 0.28),
-          bottomColor: hexToRgba(color, 0.0),
+          topColor: hexToRgba(color, 0.38),
+          bottomColor: hexToRgba(color, 0.02),
           crosshairMarkerVisible: true,
           crosshairMarkerRadius: 5,
           crosshairMarkerBorderWidth: 2,
@@ -256,6 +259,18 @@ export function PredictionMarketChart({
         series.createPriceLine({
           price: targetPrice,
           color: 'rgba(255,255,255,0.25)',
+          lineWidth: 1,
+          lineStyle: LineStyle.Dashed,
+          axisLabelVisible: true,
+          title: '',
+        });
+      }
+
+      // Add start price reference line (Palpitano style)
+      if (idx === 0 && startPrice != null) {
+        series.createPriceLine({
+          price: startPrice,
+          color: 'rgba(255,255,255,0.18)',
           lineWidth: 1,
           lineStyle: LineStyle.Dashed,
           axisLabelVisible: true,
@@ -343,7 +358,7 @@ export function PredictionMarketChart({
       seriesMapRef.current.clear();
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [lines.map(l => l.key + l.color).join(','), isPercentDomain, showDates, height, targetPrice, useAreaSeries, isCandlestick]);
+  }, [lines.map(l => l.key + l.color).join(','), isPercentDomain, showDates, height, targetPrice, startPrice, useAreaSeries, isCandlestick]);
 
   useEffect(() => {
     if (!chartRef.current || seriesMapRef.current.size === 0) return;

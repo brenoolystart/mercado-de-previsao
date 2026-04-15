@@ -435,29 +435,35 @@ export function FeaturedMarket({ market }: FeaturedMarketProps) {
       <div>
         {renderHeader()}
 
-        {/* Crypto header: Target Price, Live Price, Countdown */}
+        {/* Palpitano-style crypto header */}
         <div className="flex flex-wrap items-center gap-4 md:gap-8 mb-3">
           <div>
-            <span className="text-[10px] uppercase text-muted-foreground tracking-wider">{t('markets.targetPrice')}</span>
-            <p className="text-lg font-bold text-foreground">${targetPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+            <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Preço Inicial</span>
+            <p className="text-lg font-bold text-foreground">R$ {targetPrice.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}</p>
+          </div>
+          <div className="flex items-center">
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+              priceDiff >= 0 ? 'bg-green/15 text-green' : 'bg-red/15 text-red'
+            }`}>
+              {priceDiff >= 0 ? '▲' : '▼'} R$ {Math.abs(priceDiff).toFixed(0)}
+            </span>
           </div>
           <div>
-            <span className="text-[10px] uppercase text-muted-foreground tracking-wider flex items-center gap-1">
-              {t('markets.currentPrice')}
-              <span className="inline-flex items-center gap-0.5 text-[9px] text-green-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                {t('markets.live')}
+            <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold flex items-center gap-1">
+              Preço Atual
+              <span className="inline-flex items-center gap-0.5 text-[9px] text-green">
+                <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+                AO VIVO
               </span>
             </span>
-            <p className={`text-lg font-bold ${priceDiff >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              ${btcPrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-              <span className="text-xs ml-1">{priceDiff >= 0 ? '▲' : '▼'} ${Math.abs(priceDiff).toFixed(0)}</span>
+            <p className={`text-lg font-bold ${priceDiff >= 0 ? 'text-green' : 'text-red'}`}>
+              R$ {btcPrice.toLocaleString('pt-BR', { minimumFractionDigits: 3 })}
             </p>
           </div>
-          {/* Rolling countdown for current interval */}
+          {/* Rolling countdown */}
           <div>
-            <span className="text-[10px] uppercase text-muted-foreground tracking-wider">{t('markets.closesIn', { defaultValue: 'Termina em' })}</span>
-            <p className={`text-2xl font-bold tabular-nums ${btcCountdown <= 30 ? 'text-red-500' : 'text-primary'}`}>
+            <span className="text-[10px] uppercase text-muted-foreground tracking-wider font-semibold">Termina em</span>
+            <p className={`text-2xl font-bold tabular-nums ${btcCountdown <= 30 ? 'text-red' : 'text-primary'}`}>
               {countdownStr}
             </p>
           </div>
@@ -511,15 +517,16 @@ export function FeaturedMarket({ market }: FeaturedMarketProps) {
             </div>
             <PredictionMarketChart
               data={liveCryptoChart}
-              lines={[{ key: 'price', label: 'BTC', color: '#facc15' }]}
+              lines={[{ key: 'price', label: 'BTC', color: priceDiff >= 0 ? '#22c55e' : '#ef4444' }]}
               height={200}
               domain={['auto', 'auto']}
-              yFormatter={(v) => `$${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`}
+              yFormatter={(v) => `R$ ${v.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
               showDates={true}
               wsSymbol="btcusdt"
               wsTargetKey="price"
               targetPrice={targetPrice}
               targetLabel="Target"
+              startPrice={btcStartPrice || undefined}
             />
           </div>
         </div>

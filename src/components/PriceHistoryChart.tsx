@@ -74,7 +74,11 @@ function detectCryptoSymbol(title: string): string | null {
 }
 
 function formatPrice(price: number): string {
-  if (price >= 1000) return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`;
+}
+
+function formatPriceShort(price: number): string {
+  if (price >= 1000) return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   if (price >= 1) return price.toFixed(4);
   return price.toFixed(6);
 }
@@ -86,12 +90,38 @@ function formatVolume(vol: number): string {
   return `$${vol.toFixed(0)}`;
 }
 
+/* ── Last-results row (Palpitano "Últimos" arrows) ── */
+function LastResults({ data }: { data: { open: number; close: number }[] }) {
+  const last6 = data.slice(-6);
+  if (last6.length === 0) return null;
+  return (
+    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <span>Últimos</span>
+      <div className="flex items-center gap-0.5">
+        {last6.map((c, i) => (
+          <span
+            key={i}
+            className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold ${
+              c.close >= c.open
+                ? 'bg-green/20 text-green'
+                : 'bg-red/20 text-red'
+            }`}
+          >
+            {c.close >= c.open ? '▲' : '▼'}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, marketTitle }: PriceHistoryChartProps) {
   const [cryptoData, setCryptoData] = useState<CryptoData | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedInterval, setSelectedInterval] = useState(0);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [chartMode, setChartMode] = useState<'area' | 'candlestick'>('area');
+  const [startPrice, setStartPrice] = useState<number | null>(null);
 
   const detectedSymbol = cryptoSymbol || (marketTitle ? detectCryptoSymbol(marketTitle) : null);
   const showCrypto = isCrypto || !!detectedSymbol;
@@ -106,6 +136,10 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
       });
       if (error) throw error;
       setCryptoData(data);
+      // Set start price from first candle of interval
+      if (data?.priceHistory?.length > 0) {
+        setStartPrice(data.priceHistory[0].open);
+      }
     } catch (err) {
       console.error('Error fetching crypto data:', err);
     } finally {
@@ -117,7 +151,6 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
     fetchCryptoData();
   }, [fetchCryptoData]);
 
-  // Auto-refresh every 10 seconds for live data
   useEffect(() => {
     if (!autoRefresh || !showCrypto) return;
     const timer = setInterval(fetchCryptoData, 10000);
@@ -129,11 +162,10 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
     [yesPrice, marketId]
   );
 
-  // Crypto chart data with OHLC for candlestick
   const cryptoChartData = useMemo((): ChartDataPoint[] => {
     if (!cryptoData?.priceHistory) return [];
     return cryptoData.priceHistory.map((p) => ({
-      t: Math.floor(p.time / 1000), // Unix seconds for lightweight-charts
+      t: Math.floor(p.time / 1000),
       price: p.close,
       open: p.open,
       high: p.high,
@@ -143,9 +175,10 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
     }));
   }, [cryptoData]);
 
-  const priceDirection = cryptoData ? (cryptoData.priceChange24h >= 0 ? 'up' : 'down') : null;
+  const priceDirection = cryptoData ? (cryptoData.currentPrice >= (startPrice || cryptoData.currentPrice) ? 'up' : 'down') : null;
+  const priceDiff = cryptoData && startPrice ? cryptoData.currentPrice - startPrice : 0;
+  const lineColor = priceDirection === 'up' ? '#22c55e' : '#ef4444';
 
-  // Default non-crypto chart data (must be before early return to satisfy hooks rules)
   const chartData = useMemo(() => defaultData.map((d, i) => ({
     t: i, date: d.date, yes: d.yes, no: d.no,
   })), [defaultData]);
@@ -153,64 +186,22 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
   if (showCrypto && detectedSymbol) {
     return (
       <div className="w-full">
-        {/* Header with live price */}
-        <div className="flex items-center justify-between mb-4">
-          <div>
+        {/* ── Palpitano-style header ── */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-foreground text-lg">
-                {detectedSymbol.replace('USDT', '')} / USDT
-              </h3>
-              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                autoRefresh ? 'bg-green/20 text-green' : 'bg-muted text-muted-foreground'
-              }`}>
-                <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-green animate-pulse' : 'bg-muted-foreground'}`} />
-                {autoRefresh ? 'AO VIVO' : 'PAUSADO'}
-              </div>
+              <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
+              <span className="text-[11px] font-bold text-green uppercase tracking-wide">AO VIVO</span>
             </div>
-            {cryptoData && (
-              <div className="flex items-center gap-3 mt-1">
-                <span className="text-2xl font-bold text-foreground">${formatPrice(cryptoData.currentPrice)}</span>
-                <span className={`flex items-center gap-1 text-sm font-semibold ${priceDirection === 'up' ? 'text-green' : 'text-red'}`}>
-                  {priceDirection === 'up' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  {cryptoData.priceChange24h >= 0 ? '+' : ''}{cryptoData.priceChange24h.toFixed(2)}%
-                </span>
-              </div>
-            )}
+            <LastResults data={cryptoData?.priceHistory || []} />
           </div>
-          <button
-            onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`p-2 rounded-lg transition-colors ${autoRefresh ? 'bg-green/10 text-green' : 'bg-secondary text-muted-foreground hover:text-foreground'}`}
-          >
-            <RefreshCw className={`h-4 w-4 ${autoRefresh && !loading ? 'animate-spin' : ''}`} style={{ animationDuration: '3s' }} />
-          </button>
-        </div>
-
-        {/* Stats row */}
-        {cryptoData && (
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="bg-secondary/50 rounded-lg p-2 text-center">
-              <div className="text-xs text-muted-foreground">Máx 24h</div>
-              <div className="text-sm font-semibold text-foreground">${formatPrice(cryptoData.high24h)}</div>
-            </div>
-            <div className="bg-secondary/50 rounded-lg p-2 text-center">
-              <div className="text-xs text-muted-foreground">Mín 24h</div>
-              <div className="text-sm font-semibold text-foreground">${formatPrice(cryptoData.low24h)}</div>
-            </div>
-            <div className="bg-secondary/50 rounded-lg p-2 text-center">
-              <div className="text-xs text-muted-foreground">Vol 24h</div>
-              <div className="text-sm font-semibold text-foreground">{formatVolume(cryptoData.volume24h)}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Interval selector + chart type toggle */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            {/* Interval selector */}
             {INTERVALS.map((interval, idx) => (
               <button
                 key={interval.value}
                 onClick={() => setSelectedInterval(idx)}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-full transition-colors ${
+                className={`px-2.5 py-1 text-[11px] font-semibold rounded-full transition-colors ${
                   selectedInterval === idx
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
@@ -219,45 +210,84 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
                 {interval.label}
               </button>
             ))}
-          </div>
-          <div className="flex items-center gap-1 bg-secondary/60 rounded-lg p-0.5">
-            <button
-              onClick={() => setChartMode('area')}
-              className={`p-1.5 rounded-md transition-colors ${
-                chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-              }`}
-              title="Gráfico de Área"
-            >
-              <LineChart className="h-3.5 w-3.5" />
-            </button>
-            <button
-              onClick={() => setChartMode('candlestick')}
-              className={`p-1.5 rounded-md transition-colors ${
-                chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
-              }`}
-              title="Candlestick"
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-            </button>
+            {/* Chart type toggle */}
+            <div className="flex items-center gap-0.5 bg-secondary/60 rounded-lg p-0.5 ml-1">
+              <button
+                onClick={() => setChartMode('area')}
+                className={`p-1.5 rounded-md transition-colors ${
+                  chartMode === 'area' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <LineChart className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => setChartMode('candlestick')}
+                className={`p-1.5 rounded-md transition-colors ${
+                  chartMode === 'candlestick' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Chart — using lightweight-charts for both area and candlestick */}
+        {/* ── PREÇO INICIAL / PREÇO ATUAL row ── */}
+        {cryptoData && (
+          <div className="flex items-center justify-between mb-3 px-1">
+            <div>
+              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Preço Inicial</div>
+              <div className="text-sm font-bold text-foreground">{formatPrice(startPrice || cryptoData.priceHistory?.[0]?.open || 0)}</div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                priceDiff >= 0 ? 'bg-green/15 text-green' : 'bg-red/15 text-red'
+              }`}>
+                {priceDiff >= 0 ? '▲' : '▼'} R$ {Math.abs(priceDiff).toFixed(0)}
+              </span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Preço Atual</span>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Preço Atual</div>
+              <div className={`text-sm font-bold ${priceDiff >= 0 ? 'text-green' : 'text-red'}`}>
+                {formatPrice(cryptoData.currentPrice)}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Chart */}
         <PredictionMarketChart
           data={cryptoChartData}
-          lines={[{ key: 'price', label: detectedSymbol?.replace('USDT', '') || 'Price', color: priceDirection === 'up' ? '#22c55e' : '#ef4444' }]}
+          lines={[{ key: 'price', label: detectedSymbol?.replace('USDT', '') || 'Price', color: lineColor }]}
           height={300}
           domain={['auto', 'auto']}
-          yFormatter={(v) => `$${formatPrice(v)}`}
+          yFormatter={(v) => `R$ ${formatPriceShort(v)}`}
           chartType={chartMode}
           showDates
+          startPrice={startPrice || undefined}
         />
+
+        {/* Stats row */}
+        {cryptoData && (
+          <div className="grid grid-cols-3 gap-3 mt-3">
+            <div className="bg-secondary/50 rounded-xl p-2.5 text-center">
+              <div className="text-[10px] text-muted-foreground">Máx 24h</div>
+              <div className="text-xs font-semibold text-foreground">R$ {formatPriceShort(cryptoData.high24h)}</div>
+            </div>
+            <div className="bg-secondary/50 rounded-xl p-2.5 text-center">
+              <div className="text-[10px] text-muted-foreground">Mín 24h</div>
+              <div className="text-xs font-semibold text-foreground">R$ {formatPriceShort(cryptoData.low24h)}</div>
+            </div>
+            <div className="bg-secondary/50 rounded-xl p-2.5 text-center">
+              <div className="text-[10px] text-muted-foreground">Vol 24h</div>
+              <div className="text-xs font-semibold text-foreground">{formatVolume(cryptoData.volume24h)}</div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
-
-
-
 
   return (
     <div className="w-full">
@@ -275,7 +305,6 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
                 <stop offset="100%" stopColor="hsl(var(--red))" stopOpacity={0} />
               </linearGradient>
             </defs>
-            {/* Dashed reference lines like Polymarket */}
             {[0, 25, 50, 75, 100].map(v => (
               <ReferenceLine key={v} y={v} stroke="hsl(var(--border))" strokeDasharray="3 3" strokeWidth={1} />
             ))}
