@@ -60,9 +60,7 @@ function isCryptoUpDown(title: string): boolean {
 }
 
 function formatCryptoPrice(price: number): string {
-  if (price >= 1000) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  if (price >= 1) return '$' + price.toFixed(4);
-  return '$' + price.toFixed(6);
+  return 'R$ ' + price.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 }
 
 function detectCryptoInterval(title: string): string {
