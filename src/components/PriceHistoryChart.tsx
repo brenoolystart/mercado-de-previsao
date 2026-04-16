@@ -266,6 +266,8 @@ export function PriceHistoryChart({ yesPrice, marketId, isCrypto, cryptoSymbol, 
           chartType={chartMode}
           showDates
           startPrice={startPrice || undefined}
+          wsSymbol={chartMode === 'area' ? detectedSymbol?.toLowerCase() : undefined}
+          wsTargetKey={chartMode === 'area' ? 'price' : undefined}
         />
 
         {/* Stats row */}
