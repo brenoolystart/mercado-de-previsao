@@ -431,38 +431,51 @@ export function PredictionMarketChart({
     if (!wsSymbol || !wsTargetKey) return;
 
     const url = `wss://stream.binance.com:9443/ws/${wsSymbol.toLowerCase()}@trade`;
-    let lastUpdate = 0;
     let tickCount = data.length;
+    let currentPrice: number | null = null;
+    let targetPriceLive: number | null = null;
+    let interpFrame = 0;
+
+    // Smooth interpolation loop — eases price toward target ~60fps (Palpitano-style)
+    const animate = () => {
+      const series = seriesMapRef.current.get(wsTargetKey);
+      if (series && currentPrice != null && targetPriceLive != null) {
+        // Ease 12% per frame toward target — produces smooth fluid motion
+        const diff = targetPriceLive - currentPrice;
+        if (Math.abs(diff) > 0.0000001) {
+          currentPrice = currentPrice + diff * 0.12;
+          tickCount += 0.05;
+          try {
+            series.update({ time: tickCount as Time, value: currentPrice });
+            updateDotPosition();
+            updateTargetLabel();
+          } catch {}
+        }
+      }
+      interpFrame = requestAnimationFrame(animate);
+    };
 
     const connect = () => {
       const ws = new WebSocket(url);
       wsRef.current = ws;
 
-      ws.onmessage = (event) => {
-        const now = Date.now();
-        if (now - lastUpdate < 800) return;
-        lastUpdate = now;
+      ws.onopen = () => {
+        interpFrame = requestAnimationFrame(animate);
+      };
 
+      ws.onmessage = (event) => {
         try {
           const msg = JSON.parse(event.data);
           const price = parseFloat(msg.p);
           if (!price) return;
-
-          const series = seriesMapRef.current.get(wsTargetKey);
-          if (!series) return;
-
-          tickCount++;
-          series.update({ time: tickCount as Time, value: price });
-
-          requestAnimationFrame(() => {
-            updateDotPosition();
-            updateTargetLabel();
-          });
+          if (currentPrice == null) currentPrice = price;
+          targetPriceLive = price;
         } catch {}
       };
 
       ws.onerror = () => ws.close();
       ws.onclose = () => {
+        cancelAnimationFrame(interpFrame);
         setTimeout(() => { if (wsRef.current === ws) connect(); }, 3000);
       };
     };
@@ -470,6 +483,7 @@ export function PredictionMarketChart({
     connect();
 
     return () => {
+      cancelAnimationFrame(interpFrame);
       const ws = wsRef.current;
       wsRef.current = null;
       ws?.close();
