@@ -34,6 +34,9 @@ export function useFeatureFlags() {
       const parsed: Partial<FlagsMap> = {};
       data.forEach((item) => {
         const val = item.value;
+        // Mercados habilitados neste deploy, mesmo se o valor salvo estiver desativado.
+        // Os demais recursos continuam respeitando as configurações remotas.
+        if (item.key === 'feature_markets') return;
         parsed[item.key as FeatureFlagKey] = val === true || val === 'true' || val === '"true"';
       });
       setFlags(prev => ({ ...prev, ...parsed }));
