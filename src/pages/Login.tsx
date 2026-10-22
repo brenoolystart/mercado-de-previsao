@@ -9,8 +9,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { useRecaptcha } from '@/hooks/useRecaptcha';
-import { ReCaptchaWidget, ReCaptchaBadge } from '@/components/ReCaptcha';
 import logoLight from '@/assets/logo.png';
 import logoDark from '@/assets/logo-dark.png';
 
@@ -22,18 +20,10 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { captchaToken, setCaptchaToken, verifyCaptcha, captchaResetTrigger } = useRecaptcha();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    const captchaResult = await verifyCaptcha('login');
-    if (!captchaResult.success) {
-      toast({ title: 'Verificação necessária', description: captchaResult.error, variant: 'destructive' });
-      setLoading(false);
-      return;
-    }
 
     const { error } = await signIn(email, password);
     if (error) {
@@ -72,9 +62,7 @@ export default function Login() {
               </div>
               <Link to="/forgot-password" className="text-sm text-primary hover:underline">Esqueceu a senha?</Link>
             </div>
-            <ReCaptchaWidget onVerify={setCaptchaToken} resetTrigger={captchaResetTrigger} />
-            <Button type="submit" className="w-full" disabled={loading || !captchaToken}>{loading ? 'Entrando...' : 'Entrar'}</Button>
-            <ReCaptchaBadge />
+            <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</Button>
           </form>
           <div className="relative my-6">
             <Separator />
