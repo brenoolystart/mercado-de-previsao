@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { fetchPublicMarketsFallback } from '@/lib/publicMarketFallback';
 
 export interface MarketOption {
   label: string;
@@ -256,16 +257,27 @@ export function useNews() {
         // Still fetch fresh data in background but don't block
       }
 
-      // Try to fetch from edge function, fall back to demo data
+      // Prefer the existing Supabase feed, then the read-only public Polymarket proxy.
       let polymarkets: PredictionMarket[] = [];
       let topics: TrendingTopic[] = getDefaultTopics();
 
       try {
-        const { data, error: fetchError } = await supabase.functions.invoke('fetch-polymarket', {
-          body: null,
-        });
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 9000);
+        let data: any;
+        let fetchError: any;
+        try {
+          const result = await supabase.functions.invoke('fetch-polymarket', {
+            body: null,
+            signal: controller.signal,
+          });
+          data = result.data;
+          fetchError = result.error;
+        } finally {
+          clearTimeout(timer);
+        }
 
-        if (!fetchError && data?.markets && data.markets.length > 0) {
+        if (!fetchError && Array.isArray(data?.markets) && data.markets.length > 0) {
           polymarkets = data.markets.map((m: any) => ({
             id: m.id,
             question: m.question,
@@ -312,11 +324,22 @@ export function useNews() {
           }
           topics = merged.length > 0 ? merged : getDefaultTopics();
         }
-      } catch {
-        console.log('Edge function not available, using demo data');
+      } catch (err) {
+        console.warn('Supabase market feed unavailable:', err);
       }
 
-      // No demo fallback - only real data from Polymarket
+      // If Supabase is offline or returns no markets, fetch real public prices
+      // through a read-only endpoint on the same Vercel deployment.
+      if (polymarkets.length === 0) {
+        try {
+          polymarkets = await fetchPublicMarketsFallback();
+          topics = extractTopicsFromMarkets(polymarkets);
+        } catch (err) {
+          console.error('Public Polymarket fallback unavailable:', err);
+        }
+      }
+
+      // No simulated markets: show a clear error if both live feeds fail.
       if (polymarkets.length === 0) {
         // Only show error if we have no existing data
         if (allMarkets.length === 0) {
