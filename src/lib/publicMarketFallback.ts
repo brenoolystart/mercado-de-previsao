@@ -20,14 +20,14 @@ function classifyMarket(market: Record<string, any>): string {
     .join(' ');
   const text = `${market.question || ''} ${event?.title || ''} ${market.sportsMarketType || ''} ${tags}`.toLowerCase();
 
-  if (/\\b(nba|nfl|nhl|mlb|ncaa|ufc|mma|fifa|football|soccer|basketball|baseball|tennis|cricket|champions league|premier league|formula 1|f1|sports|esports)\\b/.test(text)) return 'sports';
-  if (/\\b(bitcoin|btc|ethereum|eth|solana|crypto|dogecoin|xrp|token|blockchain)\\b/.test(text)) return 'crypto';
-  if (/\\b(election|president|trump|senate|congress|parliament|governor|vote|politic|democrat|republican)\\b/.test(text)) return 'politics';
-  if (/\\b(interest rate|federal reserve|stock|nasdaq|s&p|treasury|bank|dow jones|forex)\\b/.test(text)) return 'finance';
-  if (/\\b(inflation|gdp|unemployment|recession|economy|jobs report)\\b/.test(text)) return 'economy';
-  if (/\\b(ai|artificial intelligence|openai|chatgpt|apple|google|tesla|microsoft|technology|tech)\\b/.test(text)) return 'tech';
-  if (/\\b(oscar|grammy|movie|film|music|celebrity|entertainment|culture)\\b/.test(text)) return 'culture';
-  if (/\\b(health|disease|pandemic|vaccine|medicine)\\b/.test(text)) return 'health';
+  if (/\b(nba|nfl|nhl|mlb|ncaa|ufc|mma|fifa|football|soccer|basketball|baseball|tennis|cricket|champions league|premier league|formula 1|f1|sports|esports)\b/.test(text)) return 'sports';
+  if (/\b(bitcoin|btc|ethereum|eth|solana|crypto|dogecoin|xrp|token|blockchain)\b/.test(text)) return 'crypto';
+  if (/\b(election|president|trump|senate|congress|parliament|governor|vote|politic|democrat|republican)\b/.test(text)) return 'politics';
+  if (/\b(interest rate|federal reserve|stock|nasdaq|s&p|treasury|bank|dow jones|forex)\b/.test(text)) return 'finance';
+  if (/\b(inflation|gdp|unemployment|recession|economy|jobs report)\b/.test(text)) return 'economy';
+  if (/\b(ai|artificial intelligence|openai|chatgpt|apple|google|tesla|microsoft|technology|tech)\b/.test(text)) return 'tech';
+  if (/\b(oscar|grammy|movie|film|music|celebrity|entertainment|culture)\b/.test(text)) return 'culture';
+  if (/\b(health|disease|pandemic|vaccine|medicine)\b/.test(text)) return 'health';
   return 'world';
 }
 
